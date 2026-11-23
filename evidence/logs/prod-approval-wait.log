@@ -1,0 +1,2 @@
+2026-11-23T12:13:06Z [INFO] run_begin name=prod-approval-wait host=ci-runner user=clawhunt-deploy
+2026-11-23T12:13:06Z [WARN] WAITING_FOR_APPROVAL env=prod tag=v1 (GitHub Environments 审批人未批准；本脚本不越过门禁)

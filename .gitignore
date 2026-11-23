@@ -1,0 +1,9 @@
+.env
+.env.*
+*.env
+__pycache__/
+*.pyc
+evidence/tmp/
+*.tar.gz
+ops/deploy/state/*.env.prev
+ops/deploy/state/*.secrets.json

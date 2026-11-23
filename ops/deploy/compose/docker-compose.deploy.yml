@@ -1,0 +1,87 @@
+name: s4d
+
+# 161 上容器间 TCP 被宿主防火墙拦截（ICMP 可通），因此全部服务使用 host 网络，
+# 只绑 127.0.0.1，用端口区分节点。生产环境按真实 LB/Ingress 替换本条说明。
+services:
+  pg:
+    image: postgres:16-alpine
+    network_mode: host
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env.deploy}
+    command:
+      - postgres
+      - -p
+      - "28432"
+      - -c
+      - listen_addresses=127.0.0.1
+      - -c
+      - shared_buffers=32MB
+      - -c
+      - max_connections=30
+      - -c
+      - fsync=off
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    mem_limit: 96m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 28432 -U app -d appdb"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    network_mode: host
+    command: ["redis-server", "--port", "28379", "--bind", "127.0.0.1", "--maxmemory", "32mb", "--maxmemory-policy", "allkeys-lru", "--save", ""]
+    mem_limit: 32m
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "28379", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app-a:
+    image: ${IMAGE_REPO:-s4d-api}:${IMAGE_TAG:-v1}
+    network_mode: host
+    command: ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "28101"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://app:${POSTGRES_PASSWORD}@127.0.0.1:28432/appdb
+      REDIS_URL: redis://127.0.0.1:28379/0
+      APP_VERSION: ${IMAGE_TAG:-v1}
+    mem_limit: 96m
+    depends_on:
+      pg:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  app-b:
+    image: ${IMAGE_REPO:-s4d-api}:${IMAGE_TAG:-v1}
+    network_mode: host
+    command: ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "28102"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://app:${POSTGRES_PASSWORD}@127.0.0.1:28432/appdb
+      REDIS_URL: redis://127.0.0.1:28379/0
+      APP_VERSION: ${IMAGE_TAG:-v1}
+    mem_limit: 96m
+    depends_on:
+      pg:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  lb:
+    image: nginx:1.27-alpine
+    network_mode: host
+    volumes:
+      - ../lb/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../lb/upstream.d:/etc/nginx/upstream.d:ro
+    mem_limit: 24m
+    depends_on:
+      - app-a
+      - app-b
+
+volumes:
+  pgdata:

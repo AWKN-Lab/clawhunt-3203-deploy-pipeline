@@ -1,0 +1,9 @@
+{
+  "endpoints": [
+    "/api/v1/ping",
+    "/api/v1/orgs",
+    "/api/v1/sites",
+    "/api/v1/members",
+    "/api/v1/resources"
+  ]
+}

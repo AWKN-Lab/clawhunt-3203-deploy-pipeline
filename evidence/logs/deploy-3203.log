@@ -1,0 +1,55 @@
+2026-11-23T12:08:55Z [INFO] run_begin name=deploy-3203 host=ci-runner user=clawhunt-deploy
+2026-11-23T12:08:56Z [INFO] STEP=precheck_image rc=0 image=s4d-api:v2
+2026-11-23T12:08:56Z [INFO] STEP=precheck_env_health rc=0 lb=http://127.0.0.1:28100
+2026-11-23T12:08:59Z [INFO] LOCK_ACQUIRED key=deploy:lock:test holder=test|clawhunt-deploy|ci-runner|625681
+2026-11-23T12:08:59Z [INFO] STATE_BEFORE previous_tag=v2 current_tag=v2 alembic_revision=0002 migration_reversible=true triggered_by=clawhunt-deploy
+56e7783e822ab6e844e467fc49dd2b776a88f5b2cb96b1e22a79a1251ba61546  $REPO/evidence/backups/pre-deploy-test-20261123T120859Z.sql
+2026-11-23T12:09:03Z [INFO] backup ok file=$REPO/evidence/backups/pre-deploy-test-20261123T120859Z.sql bytes=4820
+2026-11-23T12:09:03Z [INFO] STEP=backup rc=0
+2026-11-23T12:09:09Z [INFO] STEP=migration rc=0 tag=v2 target=head
+2026/11/23 12:09:13 [notice] 36#36: signal process started
+2026-11-23T12:09:13Z [INFO] lb_reload ok servers=1
+2026-11-23T12:09:13Z [INFO] lb_detach node=app-a
+2026-11-23T12:09:13Z [INFO] drain node=app-a seconds=30
+ Container s4d-app-a-1  Recreate
+ Container s4d-app-a-1  Recreated
+ Container s4d-app-a-1  Starting
+ Container s4d-app-a-1  Started
+2026-11-23T12:09:48Z [INFO] node=app-a image=s4d-api:v2 started
+2026-11-23T12:09:48Z [WARN] health node=app-a attempt=1 FAIL (healthz/readyz not both 200)
+2026-11-23T12:09:50Z [WARN] health node=app-a attempt=2 FAIL (healthz/readyz not both 200)
+2026-11-23T12:09:52Z [INFO] health node=app-a attempt=3 consec=1/3 ok
+2026-11-23T12:09:54Z [INFO] health node=app-a attempt=4 consec=2/3 ok
+2026-11-23T12:09:56Z [INFO] health node=app-a attempt=5 consec=3/3 ok
+2026/11/23 12:09:58 [notice] 49#49: signal process started
+2026-11-23T12:09:58Z [INFO] lb_reload ok servers=2
+2026-11-23T12:09:58Z [INFO] lb_attach node=app-a addr=127.0.0.1:28101
+2026-11-23T12:09:58Z [INFO] node=app-a rolled ts=2026-11-23T12:09:58Z elapsed=49s
+2026/11/23 12:10:00 [notice] 62#62: signal process started
+2026-11-23T12:10:00Z [INFO] lb_reload ok servers=1
+2026-11-23T12:10:00Z [INFO] lb_detach node=app-b
+2026-11-23T12:10:00Z [INFO] drain node=app-b seconds=30
+ Container s4d-app-b-1  Recreate
+ Container s4d-app-b-1  Recreated
+ Container s4d-app-b-1  Starting
+ Container s4d-app-b-1  Started
+2026-11-23T12:10:36Z [INFO] node=app-b image=s4d-api:v2 started
+2026-11-23T12:10:36Z [WARN] health node=app-b attempt=1 FAIL (healthz/readyz not both 200)
+2026-11-23T12:10:38Z [WARN] health node=app-b attempt=2 FAIL (healthz/readyz not both 200)
+2026-11-23T12:10:40Z [INFO] health node=app-b attempt=3 consec=1/3 ok
+2026-11-23T12:10:42Z [INFO] health node=app-b attempt=4 consec=2/3 ok
+2026-11-23T12:10:44Z [INFO] health node=app-b attempt=5 consec=3/3 ok
+2026/11/23 12:10:52 [notice] 75#75: signal process started
+2026-11-23T12:10:52Z [INFO] lb_reload ok servers=2
+2026-11-23T12:10:52Z [INFO] lb_attach node=app-b addr=127.0.0.1:28102
+2026-11-23T12:10:52Z [INFO] node=app-b rolled ts=2026-11-23T12:10:52Z elapsed=54s
+2026-11-23T12:10:52Z [INFO] STEP=rolling rc=0 nodes=2 tag=v2
+2026-11-23T12:10:53Z [INFO] smoke /api/v1/ping -> 200
+2026-11-23T12:10:53Z [INFO] smoke /api/v1/orgs -> 200
+2026-11-23T12:10:53Z [INFO] smoke /api/v1/sites -> 200
+2026-11-23T12:10:53Z [INFO] smoke /api/v1/members -> 200
+2026-11-23T12:10:53Z [INFO] smoke /api/v1/resources -> 200
+2026-11-23T12:10:53Z [INFO] STEP=smoke rc=0 endpoints=5
+0002 (head)
+2026-11-23T12:11:04Z [INFO] LOCK_RELEASED key=deploy:lock:test
+2026-11-23T12:11:04Z [INFO] STEP=deploy_done rc=0 env=test tag=v2 revision=0002 duration=125s

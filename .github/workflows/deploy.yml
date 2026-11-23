@@ -1,0 +1,79 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "deploy 或 rollback"
+        type: choice
+        options: [deploy, rollback]
+        default: deploy
+      env:
+        description: "目标环境；prod 走 GitHub Environments 审批人"
+        type: choice
+        options: [test, prod]
+        required: true
+      image_tag:
+        description: "deploy：目标镜像标签"
+        type: string
+        required: false
+      target_tag:
+        description: "rollback：回退目标标签（留空取 state previous_tag）"
+        type: string
+        required: false
+      with_db_downgrade:
+        description: "rollback：显式执行 alembic downgrade（需 reversible=true）"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ inputs.env }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # prod 环境的审批人配置在仓库 Settings → Environments → prod（Required reviewers）；
+    # 未批准时本 job 停在 Waiting for approval，不会执行任何步骤。
+    environment: ${{ inputs.env }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 准备 SSH（私钥只经 Secrets 注入，不落仓库）
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: 部署
+        if: ${{ inputs.mode == 'deploy' }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o UserKnownHostsFile=~/.ssh/known_hosts \
+            "${{ secrets.DEPLOY_HOST }}" \
+            "cd '${{ secrets.DEPLOY_PATH }}' && bash ops/deploy/deploy.sh \
+              --env '${{ inputs.env }}' \
+              --image-tag '${{ inputs.image_tag }}' \
+              --triggered-by '${{ github.actor }}' \
+              --approved-by '${{ inputs.env == 'prod' && github.actor || '' }}'"
+
+      - name: 回滚
+        if: ${{ inputs.mode == 'rollback' }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o UserKnownHostsFile=~/.ssh/known_hosts \
+            "${{ secrets.DEPLOY_HOST }}" \
+            "cd '${{ secrets.DEPLOY_PATH }}' && bash ops/deploy/rollback.sh \
+              --env '${{ inputs.env }}' \
+              --reason 'github-actions' \
+              ${{ inputs.target_tag != '' && format('--target-tag {0}', inputs.target_tag) || '' }} \
+              ${{ inputs.with_db_downgrade && '--with-db-downgrade --confirm-token CONFIRM-DOWNGRADE' || '' }}"
+
+      - name: 回读 state
+        if: always()
+        run: |
+          ssh -i ~/.ssh/deploy_key -o UserKnownHostsFile=~/.ssh/known_hosts \
+            "${{ secrets.DEPLOY_HOST }}" \
+            "cd '${{ secrets.DEPLOY_PATH }}' && cat ops/deploy/state/${{ inputs.env }}.json"

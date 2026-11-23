@@ -1,0 +1,33 @@
+2026-11-23T12:24:37Z [INFO] run_begin name=fault-injection-3203 host=ci-runner user=clawhunt-deploy
+2026-11-23T12:24:38Z [INFO] STEP=precheck_image rc=0 image=s4d-api:v2-bad
+2026-11-23T12:24:38Z [INFO] STEP=precheck_env_health rc=0 lb=http://127.0.0.1:28100
+2026-11-23T12:24:38Z [INFO] LOCK_ACQUIRED key=deploy:lock:test holder=test|clawhunt-deploy|ci-runner|643047
+2026-11-23T12:24:39Z [INFO] STATE_BEFORE previous_tag=v1 current_tag=v2-bad alembic_revision=0002 migration_reversible=true triggered_by=clawhunt-deploy
+94f5cf26981d2def0c92a3117df3b94eadffcfb01588f3561c202ecca5cc9e10  $REPO/evidence/backups/pre-deploy-test-20261123T122439Z.sql
+2026-11-23T12:24:40Z [INFO] backup ok file=$REPO/evidence/backups/pre-deploy-test-20261123T122439Z.sql bytes=4820
+2026-11-23T12:24:40Z [INFO] STEP=backup rc=0
+2026-11-23T12:24:47Z [INFO] STEP=migration rc=0 tag=v2-bad target=head
+2026/11/23 12:24:49 [notice] 306#306: signal process started
+2026-11-23T12:24:49Z [INFO] lb_reload ok servers=1
+2026-11-23T12:24:49Z [INFO] lb_detach node=app-a
+2026-11-23T12:24:49Z [INFO] drain node=app-a seconds=30
+ Container s4d-app-a-1  Recreate
+ Container s4d-app-a-1  Recreated
+ Container s4d-app-a-1  Starting
+ Container s4d-app-a-1  Started
+2026-11-23T12:25:32Z [INFO] node=app-a image=s4d-api:v2-bad started
+2026-11-23T12:25:32Z [WARN] health node=app-a attempt=1 FAIL (healthz/readyz not both 200)
+2026-11-23T12:25:34Z [WARN] health node=app-a attempt=2 FAIL (healthz/readyz not both 200)
+2026-11-23T12:25:37Z [WARN] health node=app-a attempt=3 FAIL (healthz/readyz not both 200)
+2026-11-23T12:25:39Z [WARN] health node=app-a attempt=4 FAIL (healthz/readyz not both 200)
+2026-11-23T12:25:41Z [WARN] health node=app-a attempt=5 FAIL (healthz/readyz not both 200)
+2026-11-23T12:25:43Z [WARN] health node=app-a attempt=6 FAIL (healthz/readyz not both 200)
+2026-11-23T12:25:45Z [WARN] health node=app-a attempt=7 FAIL (healthz/readyz not both 200)
+2026-11-23T12:25:47Z [WARN] health node=app-a attempt=8 FAIL (healthz/readyz not both 200)
+2026-11-23T12:25:49Z [WARN] health node=app-a attempt=9 FAIL (healthz/readyz not both 200)
+2026-11-23T12:25:51Z [WARN] health node=app-a attempt=10 FAIL (healthz/readyz not both 200)
+2026-11-23T12:25:53Z [ERROR] health node=app-a gate FAILED after 10 attempts
+2026-11-23T12:25:53Z [ERROR] health gate failed node=app-a (部署停止，保留摘除状态)
+2026-11-23T12:25:53Z [ERROR] auto rollback invoked reason=health_gate_failed_app-a
+2026-11-23T12:27:27Z [INFO] STEP=rollback rc=0 reason=health_gate_failed_app-a
+2026-11-23T12:27:28Z [INFO] LOCK_RELEASED key=deploy:lock:test

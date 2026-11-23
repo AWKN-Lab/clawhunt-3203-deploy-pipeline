@@ -1,0 +1,4 @@
+2026-11-23T12:12:43Z [INFO] run_begin name=lock-conflict-3203 host=ci-runner user=clawhunt-deploy
+2026-11-23T12:12:46Z [INFO] STEP=precheck_image rc=0 image=s4d-api:v2
+2026-11-23T12:12:46Z [INFO] STEP=precheck_env_health rc=0 lb=http://127.0.0.1:28100
+2026-11-23T12:12:54Z [ERROR] LOCK_HELD by holder=demo-agent (simulated concurrent deploy); second deploy refused

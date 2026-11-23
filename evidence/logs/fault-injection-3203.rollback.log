@@ -1,0 +1,49 @@
+2026-11-23T12:25:53Z [INFO] run_begin name=fault-injection-3203.rollback host=ci-runner user=clawhunt-deploy
+2026-11-23T12:25:54Z [INFO] ROLLBACK_PLAN env=test from=v2-bad to=v1 reason=health_gate_failed_app-a with_db_downgrade=0 drain=30s
+2026-11-23T12:25:54Z [INFO] LOCK_REUSED (caller holds deploy:lock:test)
+2026-11-23T12:25:54Z [INFO] node_rollback_begin node=app-a ts=2026-11-23T12:25:54Z
+2026/11/23 12:25:56 [notice] 319#319: signal process started
+2026-11-23T12:25:56Z [INFO] lb_reload ok servers=1
+2026-11-23T12:25:56Z [INFO] lb_detach node=app-a
+2026-11-23T12:25:56Z [INFO] drain node=app-a seconds=30
+ Container s4d-app-a-1  Recreate
+ Container s4d-app-a-1  Recreated
+ Container s4d-app-a-1  Starting
+ Container s4d-app-a-1  Started
+2026-11-23T12:26:32Z [WARN] health node=app-a attempt=1 FAIL (healthz/readyz not both 200)
+2026-11-23T12:26:34Z [WARN] health node=app-a attempt=2 FAIL (healthz/readyz not both 200)
+2026-11-23T12:26:36Z [INFO] health node=app-a attempt=3 consec=1/3 ok
+2026-11-23T12:26:39Z [INFO] health node=app-a attempt=4 consec=2/3 ok
+2026-11-23T12:26:41Z [INFO] health node=app-a attempt=5 consec=3/3 ok
+2026/11/23 12:26:42 [notice] 332#332: signal process started
+2026-11-23T12:26:42Z [INFO] lb_reload ok servers=2
+2026-11-23T12:26:42Z [INFO] lb_attach node=app-a addr=127.0.0.1:28101
+2026-11-23T12:26:42Z [INFO] node_rollback_end node=app-a ts=2026-11-23T12:26:42Z elapsed=48s (threshold 180s)
+2026-11-23T12:26:42Z [INFO] node_rollback_begin node=app-b ts=2026-11-23T12:26:42Z
+2026/11/23 12:26:43 [notice] 344#344: signal process started
+2026-11-23T12:26:44Z [INFO] lb_reload ok servers=1
+2026-11-23T12:26:44Z [INFO] lb_detach node=app-b
+2026-11-23T12:26:44Z [INFO] drain node=app-b seconds=30
+ Container s4d-app-b-1  Recreate
+ Container s4d-app-b-1  Recreated
+ Container s4d-app-b-1  Starting
+ Container s4d-app-b-1  Started
+2026-11-23T12:27:18Z [WARN] health node=app-b attempt=1 FAIL (healthz/readyz not both 200)
+2026-11-23T12:27:21Z [INFO] health node=app-b attempt=2 consec=1/3 ok
+2026-11-23T12:27:23Z [INFO] health node=app-b attempt=3 consec=2/3 ok
+2026-11-23T12:27:25Z [INFO] health node=app-b attempt=4 consec=3/3 ok
+2026/11/23 12:27:26 [notice] 357#357: signal process started
+2026-11-23T12:27:27Z [INFO] lb_reload ok servers=2
+2026-11-23T12:27:27Z [INFO] lb_attach node=app-b addr=127.0.0.1:28102
+2026-11-23T12:27:27Z [INFO] node_rollback_end node=app-b ts=2026-11-23T12:27:27Z elapsed=45s (threshold 180s)
+2026-11-23T12:27:27Z [INFO] STEP=rollback_app rc=0 nodes=2 target=v1
+2026-11-23T12:27:27Z [INFO] DB_DOWNGRADE_SKIPPED (no --with-db-downgrade); 迁移遵循只加不删，旧代码可运行在新 schema 上
+2026-11-23T12:27:27Z [INFO] config_restored env_snapshot=$REPO/ops/deploy/state/test.env.prev
+2026-11-23T12:27:27Z [INFO] config_restored credential_version=v1 (凭据管家适配点，见 README)
+2026-11-23T12:27:27Z [INFO] smoke /api/v1/ping -> 200
+2026-11-23T12:27:27Z [INFO] smoke /api/v1/orgs -> 200
+2026-11-23T12:27:27Z [INFO] smoke /api/v1/sites -> 200
+2026-11-23T12:27:27Z [INFO] smoke /api/v1/members -> 200
+2026-11-23T12:27:27Z [INFO] smoke /api/v1/resources -> 200
+2026-11-23T12:27:27Z [INFO] STEP=rollback_smoke rc=0 endpoints=5
+2026-11-23T12:27:27Z [INFO] STEP=rollback_done rc=0 from=v2-bad to=v1 duration=94s
