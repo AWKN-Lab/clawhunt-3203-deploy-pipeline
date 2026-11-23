@@ -1,5 +1,5 @@
-1928efb71a05ae236323e47d1f7ea3027d175d6239f89fc0d6778e78870c31a2  ./ACCEPTANCE-EVIDENCE.md
-fd728809475b8e64b8336a768d1cdad4cfe69ef3763a10c58200cbd5ac20f3da  ./ACCEPTANCE.md
+2a99b45840bfca1cbc57deefd5ad7e7002f6bb0399a909c452a35fc901a21c7c  ./ACCEPTANCE-EVIDENCE.md
+1bbbe5e711c23d0f14cb793840e562f508d0ff3df689ac6993314a2d3257781a  ./ACCEPTANCE.md
 ac8895023e700b1bc766bbab0db66cc7c58f5efc399ac746419ed67e6b724059  ./docs/ac-3203.md
 ace3e1c0ac2c91b2fb87489e474b68fe789b097bac4c9d7753ab0a2a7e983350  ./docs/MIGRATION-COMPAT.md
 85f47468ff19332dcb88bc6384746f11df01e24b2fe25dc9f7ce654ca9b00e39  ./evidence/loadtest-3203.json
@@ -10,6 +10,7 @@ f59337e59ee836c50dec5257ead0118252a81ff4bc36404d3203345a9a7dd9c3  ./evidence/log
 6a45550a62d44a3d5098742a2c3a1ab6b7c3a08c86cfc6deac2c7d311c427b21  ./evidence/logs/lock-conflict-3203.log
 4301227b2dbc841aa41129edc30dce688f45ec930b32d12daee1353b1488f1c0  ./evidence/logs/prod-approval-wait.log
 bd6b8bff0c47b302161436e655074553ee6a8a4e3454e16d95d12d1592e2e0e8  ./evidence/prod-approval-wait.png
+d1e33b2fe3936adedc9f9f8d4fca7cd4cb717e7196a1bde6bb3e39cfb684d8f4  ./.gitattributes
 c2247ad4b63498ad6027ef52a8fa877957a041c5985475f420c2ce599f41545e  ./.github/workflows/deploy.yml
 0f7d7565f2f34f3d8736bfb9f443594453f9f0a8cbf0ee72a39c5a7bb1eaf64e  ./.gitignore
 0a87e3459c5cdc4fb54860bf755db920a1e7b6cbfc4b73f03bd6fc3c3f76dc9b  ./ops/app/alembic/env.py

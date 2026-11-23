@@ -127,4 +127,6 @@ Note: the GitHub Actions approval UI cannot be screenshotted without a live repo
 - `bash scripts/secret-scan.sh` → `scan_result=PASS` (private keys, GitHub/cloud tokens, password
   values, private IPs, local absolute paths, e-mails, bid/agent identifiers, hostname leaks, `.env`
   files: all zero findings).
-- `sha256sum -c MANIFEST.sha256` executed on a fresh clone of this repository → 0 failures.
+- `.gitattributes` pins `* -text`, so no platform rewrites line endings.
+- `sha256sum -c MANIFEST.sha256` on a fresh Linux clone → 0 failures;
+  the same manifest verified file-by-file with SHA-256 on a fresh Windows clone → 0 failures.

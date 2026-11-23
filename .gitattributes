@@ -1,0 +1,2 @@
+# Keep bytes identical on every platform: MANIFEST.sha256 is byte-exact.
+* -text
